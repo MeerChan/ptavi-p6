@@ -13,7 +13,7 @@ try:
         print()
         sys.exit("Method must be INVITE or BYE")
     LOGIN_IP = sys.argv[2].split(':')[0] #login@ip (me estoy quedando con todo junto)
-    IPSERVER = LOGIN.split('@')[1]#la necesito para concetarme solamente
+    IPSERVER = LOGIN_IP.split('@')[1]#la necesito para concetarme solamente
     PORTSERVER = int(sys.argv[2].split(':')[1])
 
 except ValueError:
@@ -27,13 +27,13 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as my_socket:
     print("Enviando:", METODO.upper() + ' sip:' + LOGIN_IP + ' SIP/2.0')
     # Se lo enviamos al servidor
     my_socket.send(bytes(METODO.upper() + ' sip:' + LOGIN_IP + ' SIP/2.0\r\n'
-                            + b'\r\n\r\n'))
+    , 'utf-8')    + b'\r\n\r\n')
     data = my_socket.recv(1024)
     recibido = data.decode('utf-8')
     print('Recibido -- ', data.decode('utf-8'))
 
     if METODO.upper() == 'INVITE':
-         if recibidob[2] == 'TRYING' and recibido[5] == "RINGING" and recibido[8] == "OK":
+         if (recibido[2] == 'TRYING' and recibido[5] == "RINGING" and recibido[8] == "OK"):
             my_socket.send(bytes('ACK sip:' + LOGIN_IP + ' SIP/2.0', 'utf-8')
                            + b'\r\n\r\n')
     if METODO == 'BYE':
