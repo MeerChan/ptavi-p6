@@ -9,7 +9,7 @@ import sys
 # Linea
 try:
     METODO = sys.argv[1]
-    if METODO.upper() != ('INVITE' or 'BYE'):
+    if (METODO.upper() != 'INVITE') and (METODO.upper() != 'BYE'):
         print()
         sys.exit("Method must be INVITE or BYE")
     LOGIN_IP = sys.argv[2].split(':')[0] #login@ip (me estoy quedando con todo junto)

@@ -35,7 +35,7 @@ class SIPRegisterHandler(socketserver.DatagramRequestHandler):
                                  + b"SIP/2.0 200 OK\r\n\r\n")
             elif peticion == 'BYE':
                 print('es unbyeee')
-                self.wfile.write("SIP/2.0 200 OK\r\n\r\n")
+                self.wfile.write(b"SIP/2.0 200 OK\r\n\r\n")
             else:
                 print('nunca deberia llegar a aqui si se usa mi cliente')
                 self.wfile.write(b"SIP/2.0 405 Method Not Allowed\r\n\r\n")
