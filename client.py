@@ -33,10 +33,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as my_socket:
     print('Recibido -- ', data.decode('utf-8'))
 
     if METODO.upper() == 'INVITE':
-         if recibidob[2] == 'Trying' and recb[5] == "Ringing" and recb[8] == "OK":
-            my_socket.send(bytes('ACK sip:' + ADRESS + ' SIP/2.0', 'utf-8')
+         if recibidob[2] == 'TRYING' and recibido[5] == "RINGING" and recibido[8] == "OK":
+            my_socket.send(bytes('ACK sip:' + LOGIN_IP + ' SIP/2.0', 'utf-8')
                            + b'\r\n\r\n')
     if METODO == 'BYE':
-
-
-print("Socket terminado.")
+        if recibido == "SIP/2.0 200 OK\r\n\r\n":
+            print("Terminando socket...")

@@ -39,9 +39,7 @@ class SIPRegisterHandler(socketserver.DatagramRequestHandler):
         """
         # COmpruebo si ya esta creado el json
         self.json2register()
-        self.wfile.write(b"SIP/2.0 100 TRYING\r\n
-                           SIP/2.0 180 RING\r\n
-                           SIP/2.0 200 OK\r\n\r\n")
+
         milinea = ''
         for line in self.rfile:
             milinea += line.decode('utf-8')
@@ -49,41 +47,29 @@ class SIPRegisterHandler(socketserver.DatagramRequestHandler):
             print("El cliente nos manda ", milinea)
             # Quitamosos el expires: que no usamos con _
             (peticion, address, sip, _, expire) = milinea.split()
-            if peticion == 'REGISTER':
-                IP = self.client_address[0]
-                # quito el sip, quedandome con el segundo obejeto del split
-                user = address.split(':')[1]
-                # Timpo en el que caducaria la sesion (actual+expires)
-                Tiempo = time.time() + int(expire)
-                # convierto el tiempo a horas min segundos
-                TiempoHMS = time.strftime('%Y-%m-%d %H:%M:%S',
-                                          time.gmtime(Tiempo))
-                # tiempo actual
-                Ahora = time.strftime('%Y-%m-%d %H:%M:%S',
-                                      time.gmtime(time.time()))
-                self.dicc[user] = {'address': IP, 'expires': TiempoHMS}
-                userBorrados = []
-                for user in self.dicc:
-                    if Ahora >= self.dicc[user]['expires']:
-                        userBorrados.append(user)
-                # COmo no podemos modificar el tamaño del diccionario mientras
-                # lo recorremos necesitamos hacer esto
-                for user in userBorrados:
-                    del self.dicc[user]
-                self.register2json()
+            if peticion == 'INVITE':
+                print('es un invite')
+                self.wfile.write(b"SIP/2.0 100 TRYING\r\n\r\n
+                                   SIP/2.0 180 RING\r\n\r\n
+                                   SIP/2.0 200 OK\r\n\r\n")
+            elif peticion == 'BYE':
+                print('es unbyeee')
+                self.wfile.write(b"SIP/2.0 200 OK\r\n\r\n")
+            else:
+                print('nunca deberia llegar a aqui si se usa mi cliente')
+                self.wfile.write(b"SIP/2.0 405 Method Not Allowed\r\n\r\n")
 
 
 if __name__ == "__main__":
-    # Listens at localhost ('') port 6001
-    # and calls the EchoHandler class to manage the request
-    if len(sys.argv) != 2:
-        sys.exit("Usage: server.py port")
+
+    if len(sys.argv) != 4:
+        sys.exit("Usage: python3 server.py IP port audio_file")
     try:
         PORTSERVER = int(sys.argv[1])
     except ValueError:
         sys.exit("Port must be a number")
     except IndexError:
-        sys.exit("Usage: server.py port")
+        sys.exit("Usage: python3 server.py IP port audio_file")
     serv = socketserver.UDPServer(('', PORTSERVER), SIPRegisterHandler)
 
     print("Listening...")
