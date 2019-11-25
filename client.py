@@ -8,8 +8,10 @@ import sys
 # Constantes. Dirección IP del servidor,Puerto del servidor y
 # Linea
 try:
-    METODO = sys.argv[1]
-    if (METODO.upper() != 'INVITE') and (METODO.upper() != 'BYE'):
+    METODO = sys.argv[1].upper()
+    #restringimos el metodo
+    print(METODO)
+    if METODO != 'INVITE' and METODO != 'BYE':
         print()
         sys.exit("Method must be INVITE or BYE")
     LOGIN_IP = sys.argv[2].split(':')[0] #login@ip (me estoy quedando con todo junto)
@@ -29,11 +31,16 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as my_socket:
     my_socket.send(bytes(METODO.upper() + ' sip:' + LOGIN_IP + ' SIP/2.0\r\n'
     , 'utf-8')    + b'\r\n\r\n')
     data = my_socket.recv(1024)
-    recibido = data.decode('utf-8')
+    recibido = data.decode('utf-8').split()
     print('Recibido -- ', data.decode('utf-8'))
 
-    if METODO.upper() == 'INVITE':
+    if METODO == 'INVITE':
+         print('sdfs')
+         print(recibido[2])
+         print(recibido[5])
+         print(recibido[8])
          if (recibido[2] == 'TRYING' and recibido[5] == "RINGING" and recibido[8] == "OK"):
+            print('entra')
             my_socket.send(bytes('ACK sip:' + LOGIN_IP + ' SIP/2.0', 'utf-8')
                            + b'\r\n\r\n')
     if METODO == 'BYE':
