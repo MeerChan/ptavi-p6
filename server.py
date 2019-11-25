@@ -25,7 +25,7 @@ class SIPRegisterHandler(socketserver.DatagramRequestHandler):
         for line in self.rfile:
             milinea += line.decode('utf-8')
         if milinea != '\r\n':
-            (peticion,sipLOGIN_ip,port) = milinea.split()
+            (peticion, sipLOGIN_ip, port) = milinea.split()
             if peticion == 'INVITE':
                 self.wfile.write(b"SIP/2.0 100 TRYING\r\n\r\n"
                                  + b"SIP/2.0 180 RINGING\r\n\r\n"
@@ -41,7 +41,7 @@ class SIPRegisterHandler(socketserver.DatagramRequestHandler):
             elif peticion != ('INVITE', 'ACK', 'BYE'):
                 self.wfile.write(b"SIP/2.0 405 Method Not Allowed\r\n\r\n")
             else:
-                #nunca deberia llegar a aqui si se usa mi cliente
+                # nunca deberia llegar a aqui si se usa mi cliente
                 self.wfile.write(b"SIP/2.0 400 Bad Request\r\n\r\n")
 
 
