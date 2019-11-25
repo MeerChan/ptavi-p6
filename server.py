@@ -27,19 +27,16 @@ class SIPRegisterHandler(socketserver.DatagramRequestHandler):
         if milinea != '\r\n':
             (peticion,sipLOGIN_ip,port) = milinea.split()
             if peticion == 'INVITE':
-                print('es un invite')
                 self.wfile.write(b"SIP/2.0 100 TRYING\r\n\r\n"
                                  + b"SIP/2.0 180 RINGING\r\n\r\n"
                                  + b"SIP/2.0 200 OK\r\n\r\n")
             elif peticion == 'ACK':
                 # aEjecutar es un string
                 # con lo que se ha de ejecutar en la shell
-                print('entra a adk')
                 aEjecutar = 'mp32rtp -i 127.0.0.1 -p 23032 < ' + AUDIO
                 print("Se ejecuta: ", aEjecutar)
                 os.system(aEjecutar)
             elif peticion == 'BYE':
-                print('es unbyeee')
                 self.wfile.write(b"SIP/2.0 200 OK\r\n\r\n")
             elif peticion != ('INVITE', 'ACK', 'BYE'):
                 self.wfile.write(b"SIP/2.0 405 Method Not Allowed\r\n\r\n")
