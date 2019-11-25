@@ -43,5 +43,5 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as my_socket:
                     my_socket.send(bytes('ACK sip:' + LOGIN_IP + ' SIP/2.0',
                                          'utf-8') + b'\r\n\r\n')
     if METODO == 'BYE':
-        if recibido == "SIP/2.0 200 OK\r\n\r\n":
+        if data.decode('utf-8') == "SIP/2.0 200 OK\r\n\r\n":
             print("Terminando socket...")

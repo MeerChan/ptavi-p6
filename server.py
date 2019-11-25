@@ -20,7 +20,7 @@ class SIPRegisterHandler(socketserver.DatagramRequestHandler):
         handle method of the server class
         (all requests will be handled by this method)
         """
-
+        
         milinea = ''
         for line in self.rfile:
             milinea += line.decode('utf-8')
